@@ -41,11 +41,17 @@ input {
 .scene {
   position: fixed;
   inset: 0;
-  z-index: -2;
+  z-index: 0;
   overflow: hidden;
   background: #07141c;
+  pointer-events: none;
   transition: background 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   --energy-scale: var(--energy, 0.65);
+}
+
+main {
+  position: relative;
+  z-index: 1;
 }
 
 /* --- Environment Base Color Themes --- */
