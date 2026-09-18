@@ -674,6 +674,22 @@ nav a:hover,
   letter-spacing: 0.1em;
   cursor: pointer;
   padding: 0 1rem;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.promptbox button:hover,
+.palette form button:hover {
+  color: var(--ink);
+  transform: translateX(4px);
+}
+
+.promptbox button:focus-visible,
+.palette form button:focus-visible,
+.shortcut:focus-visible,
+.cta:focus-visible,
+.secondary:focus-visible {
+  outline: 1px solid var(--acid);
+  outline-offset: 5px;
 }
 
 .result {
@@ -871,7 +887,12 @@ dd {
   font: 500 10px 'DM Mono', monospace;
   letter-spacing: 0.1em;
   margin: 1rem 1rem 0 0;
-  transition: background 0.8s ease, color 0.3s ease;
+  transition: background 0.8s ease, color 0.3s ease, transform 0.25s ease;
+}
+
+.contact .cta:hover {
+  color: #060707;
+  transform: translateY(-3px);
 }
 
 .secondary {
