@@ -31,9 +31,6 @@ npm run build
 
 This demo has no environment variables and makes no API calls. For a real provider, use a backend/serverless endpoint and keep credentials in server-side environment variables (for example `OPENAI_API_KEY`); never use a `VITE_` prefixed secret.
 
-## Performance
-
-The visual layer is CSS/GPU-friendly, uses a bounded particle count, avoids network calls, and honors `prefers-reduced-motion`. The displayed 60 FPS value is a target, not a measured claim.
 
 ## Future improvements
 
