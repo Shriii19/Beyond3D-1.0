@@ -24,7 +24,17 @@ const architecture = [
 
 function Scene({ scene }) {
   const particleCount = Math.floor(20 + (scene.particleLevel || 0.8) * 40)
-  
+  const [pointer, setPointer] = useState({ x: 0, y: 0 })
+
+  const handlePointerMove = (event) => {
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2
+    const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2
+    setPointer({ x, y })
+  }
+
+  const handlePointerLeave = () => setPointer({ x: 0, y: 0 })
+
   return (
     <div
       className={`scene scene--${scene.environment} scene--${scene.mood}`}
@@ -38,9 +48,13 @@ function Scene({ scene }) {
         '--energy': scene.energy,
         '--particle': scene.particleLevel,
         '--theme-accent': scene.accentColor || '#d7ff58',
-        '--theme-glow': scene.glowColor || 'rgba(215, 255, 88, 0.4)'
+        '--theme-glow': scene.glowColor || 'rgba(215, 255, 88, 0.4)',
+        '--pointer-x': pointer.x,
+        '--pointer-y': pointer.y
       }}
       aria-hidden="true"
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
     >
       <div className="grain" />
       <div className="aurora" />
