@@ -114,6 +114,44 @@ function App() {
   const [technical, setTechnical] = useState(false)
   const [activeNode, setActiveNode] = useState(2)
   const [visible, setVisible] = useState(new Set(['top']))
+  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 })
+  const [scrollProgress, setScrollProgress] = useState(0)
+  const [loading, setLoading] = useState(true)
+
+  // Handle loading sequence
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2800)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Track mouse for custom cursor
+  useEffect(() => {
+    if (loading) return
+    const handler = (e) => {
+      setCursorPos({ x: e.clientX, y: e.clientY })
+      const orb = document.getElementById('cursor-orb')
+      if (orb) {
+        orb.style.transform = `translate(${e.clientX - 12}px, ${e.clientY - 12}px)`
+      }
+    }
+    addEventListener('mousemove', handler)
+    return () => removeEventListener('mousemove', handler)
+  }, [loading])
+
+  // Track scroll progress
+  useEffect(() => {
+    if (loading) return
+    const handler = () => {
+      const scrollTop = window.scrollY
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
+      setScrollProgress(progress)
+      const fill = document.getElementById('scroll-fill')
+      if (fill) fill.style.width = `${progress}%`
+    }
+    addEventListener('scroll', handler, { passive: true })
+    return () => removeEventListener('scroll', handler)
+  }, [loading])
 
   const apply = (input) => {
     const result = generateSceneFromPrompt(input, scene)
@@ -167,7 +205,10 @@ function App() {
   )
 
   return (
-    <main>
+    <main style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.8s ease' }}>
+      {loading && (
+        <div className="loader" style={{ position: 'fixed', inset: 0, zIndex: 9999 }} />
+      )}
       <Scene scene={scene} />
       <header>
         <a className="brand" href="#top">
@@ -178,7 +219,13 @@ function App() {
           <a href="#work">WORK</a>
           <a href="#contact">CONTACT</a>
         </nav>
-        <button className="shortcut" onClick={() => setPalette(true)}>
+        <button className="shortcut" onClick={() => setPalette(true)}
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect()
+            e.currentTarget.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width * 100).toFixed(1) + '%')
+            e.currentTarget.style.setProperty('--my', ((e.clientY - rect.top) / rect.height * 100).toFixed(1) + '%')
+          }}
+        >
           ⌘ K <span>COMMAND</span>
         </button>
       </header>
@@ -201,6 +248,11 @@ function App() {
           <span>
             MOTION <b>{scene.motion ? scene.motion.toUpperCase() : 'DYNAMIC'}</b>
           </span>
+        </div>
+        <div className="wave-container" aria-hidden="true">
+          {Array.from({ length: 24 }, (_, i) => (
+            <span key={i} style={{ height: `${4 + Math.random() * 16}px` }} />
+          ))}
         </div>
         <a className="scroll" href="#lab">
           ENTER THE SYSTEM ↓
@@ -259,7 +311,15 @@ function App() {
         </h2>
         <div className="projects">
           {projects.map((p) => (
-            <article key={p[0]}>
+            <article key={p[0]} 
+              onMouseMove={(e) => {
+                const rect = e.currentTarget.getBoundingClientRect()
+                const mx = ((e.clientX - rect.left) / rect.width * 100).toFixed(1)
+                const my = ((e.clientY - rect.top) / rect.height * 100).toFixed(1)
+                e.currentTarget.style.setProperty('--mx', mx + '%')
+                e.currentTarget.style.setProperty('--my', my + '%')
+              }}
+            >
               <span>{p[0]}</span>
               <div>
                 <p className="tag">{p[2]}</p>
