@@ -208,7 +208,13 @@ function App() {
   return (
     <main style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.8s ease' }}>
       {loading && (
-        <div className="loader" style={{ position: 'fixed', inset: 0, zIndex: 9999 }} />
+        <div id="loader">
+          <div className="loader-ring" />
+          <div className="loader-text">INITIALIZING WORLD</div>
+          <div className="loader-bar">
+            <div className="loader-fill" />
+          </div>
+        </div>
       )}
       <Scene scene={scene} />
       <header>
