@@ -155,7 +155,9 @@ function App() {
   }, [loading])
 
   const apply = (input) => {
-    const result = generateSceneFromPrompt(input, scene)
+    const value = String(input ?? '').trim()
+    if (!value) return
+    const result = generateSceneFromPrompt(value, scene)
     setScene(result.scene)
     setLastResult(result)
     setPalette(false)
