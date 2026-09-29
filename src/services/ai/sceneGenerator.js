@@ -11,7 +11,7 @@ export const commandExamples = [
 
 // Adapter boundary: replace interpretLocally with a server-side LLM call without changing UI consumers.
 export function generateSceneFromPrompt(prompt, current = {}) {
-  const text = prompt.toLowerCase()
+  const text = String(prompt ?? '').trim().toLowerCase()
   const scene = {
     mood: 'cinematic',
     environment: 'ocean',
