@@ -251,7 +251,7 @@ function App() {
         </div>
         <div className="wave-container" aria-hidden="true">
           {Array.from({ length: 24 }, (_, i) => (
-            <span key={i} style={{ height: `${4 + Math.random() * 16}px` }} />
+            <span key={i} style={{ height: `${4 + ((i * 7) % 17)}px` }} />
           ))}
         </div>
         <a className="scroll" href="#lab">
