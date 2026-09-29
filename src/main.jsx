@@ -134,8 +134,8 @@ function App() {
         orb.style.transform = `translate(${e.clientX - 12}px, ${e.clientY - 12}px)`
       }
     }
-    addEventListener('mousemove', handler)
-    return () => removeEventListener('mousemove', handler)
+    window.addEventListener('mousemove', handler)
+    return () => window.removeEventListener('mousemove', handler)
   }, [loading])
 
   // Track scroll progress
@@ -149,8 +149,8 @@ function App() {
       const fill = document.getElementById('scroll-fill')
       if (fill) fill.style.width = `${progress}%`
     }
-    addEventListener('scroll', handler, { passive: true })
-    return () => removeEventListener('scroll', handler)
+    window.addEventListener('scroll', handler, { passive: true })
+    return () => window.removeEventListener('scroll', handler)
   }, [loading])
 
   const apply = (input) => {
@@ -176,8 +176,8 @@ function App() {
       }
       if (e.key === 'Escape') setPalette(false)
     }
-    addEventListener('keydown', key)
-    return () => removeEventListener('keydown', key)
+    window.addEventListener('keydown', key)
+    return () => window.removeEventListener('keydown', key)
   }, [])
 
   useEffect(() => {
