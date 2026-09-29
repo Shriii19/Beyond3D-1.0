@@ -150,6 +150,7 @@ function App() {
       if (fill) fill.style.width = `${progress}%`
     }
     window.addEventListener('scroll', handler, { passive: true })
+    handler()
     return () => window.removeEventListener('scroll', handler)
   }, [loading])
 
