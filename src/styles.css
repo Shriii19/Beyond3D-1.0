@@ -1671,6 +1671,17 @@ nav a:hover,
   text-shadow: 0 0 30px var(--acid), 0 0 60px var(--theme-glow, rgba(215, 255, 88, 0.3));
 }
 
+.menu-toggle {
+  display: none;
+  border: 1px solid var(--line);
+  background: #0c1010;
+  color: var(--ink);
+  padding: 0.7rem 0.8rem;
+  cursor: pointer;
+  font: 10px 'DM Mono', monospace;
+  letter-spacing: 0.1em;
+}
+
 /* --- Shortcut Button Enhanced --- */
 
 .shortcut {
@@ -2368,7 +2379,33 @@ footer span:hover {
 }
 
 @media (max-width: 700px) {
-  header nav { display: none; }
+  .menu-toggle {
+    display: block;
+    margin-left: auto;
+    margin-right: 0.6rem;
+  }
+  header nav {
+    position: absolute;
+    top: calc(100% - 1px);
+    left: var(--pad);
+    right: var(--pad);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--line);
+    background: rgba(5, 8, 8, 0.96);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  }
+  header nav.nav--open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  header nav a { padding: 1rem 0; }
   .shortcut span { display: none; }
   .split, .architecture__layout { grid-template-columns: 1fr; }
   .projects article { grid-template-columns: 12% 1fr; }

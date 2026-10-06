@@ -122,6 +122,7 @@ function App() {
   const [prompt, setPrompt] = useState('A futuristic gallery floating above a dark ocean.')
   const [lastResult, setLastResult] = useState(null)
   const [palette, setPalette] = useState(false)
+  const [mobileMenu, setMobileMenu] = useState(false)
   const [command, setCommand] = useState('')
   const [technical, setTechnical] = useState(false)
   const [activeNode, setActiveNode] = useState(2)
@@ -226,10 +227,20 @@ function App() {
         <a className="brand" href="#top">
           DIGITAL<br />ATELIER
         </a>
-        <nav>
-          <a href="#lab">AI LAB</a>
-          <a href="#work">WORK</a>
-          <a href="#contact">CONTACT</a>
+        <button
+          className="menu-toggle"
+          type="button"
+          aria-controls="primary-navigation"
+          aria-expanded={mobileMenu}
+          aria-label={mobileMenu ? 'Close navigation' : 'Open navigation'}
+          onClick={() => setMobileMenu((open) => !open)}
+        >
+          {mobileMenu ? 'CLOSE' : 'MENU'}
+        </button>
+        <nav id="primary-navigation" className={mobileMenu ? 'nav--open' : ''}>
+          <a href="#lab" onClick={() => setMobileMenu(false)}>AI LAB</a>
+          <a href="#work" onClick={() => setMobileMenu(false)}>WORK</a>
+          <a href="#contact" onClick={() => setMobileMenu(false)}>CONTACT</a>
         </nav>
         <button className="shortcut" onClick={() => setPalette(true)}
           onMouseMove={(e) => {
