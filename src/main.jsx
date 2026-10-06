@@ -133,7 +133,8 @@ function App() {
 
   // Handle loading sequence
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 2800)
+    const delay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 2800
+    const timer = setTimeout(() => setLoading(false), delay)
     return () => clearTimeout(timer)
   }, [])
 

@@ -2419,8 +2419,18 @@ footer span:hover {
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  #loader {
+    animation: none;
+    opacity: 0;
+  }
+  #cursor-orb { display: none; }
   *, *:before, *:after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+@media (pointer: coarse) {
+  #cursor-orb { display: none; }
 }
