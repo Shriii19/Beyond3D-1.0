@@ -129,6 +129,7 @@ function App() {
   const [visible, setVisible] = useState(new Set(['top']))
   const [loading, setLoading] = useState(true)
   const modalRef = useRef(null)
+  const modalTriggerRef = useRef(null)
   const modalOpen = palette || technical
 
   // Handle loading sequence
@@ -187,7 +188,12 @@ function App() {
     const key = (e) => {
       if (!technical && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
-        setPalette((v) => !v)
+        if (palette) {
+          setPalette(false)
+        } else {
+          modalTriggerRef.current = document.activeElement
+          setPalette(true)
+        }
       }
       if (e.key === 'Escape') {
         setPalette(false)
@@ -206,7 +212,6 @@ function App() {
       dialog.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')
     )
     const focusable = getFocusable()
-    const previousFocus = document.activeElement
     ;(dialog.querySelector('input') || focusable[0])?.focus()
 
     const trapFocus = (event) => {
@@ -227,7 +232,8 @@ function App() {
     document.addEventListener('keydown', trapFocus)
     return () => {
       document.removeEventListener('keydown', trapFocus)
-      if (previousFocus instanceof HTMLElement) previousFocus.focus()
+      if (modalTriggerRef.current instanceof HTMLElement) modalTriggerRef.current.focus()
+      modalTriggerRef.current = null
     }
   }, [modalOpen])
 
@@ -277,7 +283,10 @@ function App() {
           <a href="#work" onClick={() => setMobileMenu(false)}>WORK</a>
           <a href="#contact" onClick={() => setMobileMenu(false)}>CONTACT</a>
         </nav>
-        <button className="shortcut" onClick={() => setPalette(true)}
+        <button className="shortcut" onClick={(event) => {
+          modalTriggerRef.current = event.currentTarget
+          setPalette(true)
+        }}
           onMouseMove={(e) => {
             const rect = e.currentTarget.getBoundingClientRect()
             e.currentTarget.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width * 100).toFixed(1) + '%')
@@ -502,7 +511,10 @@ function App() {
         <span>BUILT WITH REACT + GENERATIVE VISUALS</span>
         <span>© 2026</span>
       </footer>
-      <button className="breakdown" onClick={() => setTechnical(true)}>
+      <button className="breakdown" onClick={(event) => {
+        modalTriggerRef.current = event.currentTarget
+        setTechnical(true)
+      }}>
         VIEW TECHNICAL BREAKDOWN +
       </button>
       {palette && (
