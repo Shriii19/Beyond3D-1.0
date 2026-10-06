@@ -127,8 +127,6 @@ function App() {
   const [technical, setTechnical] = useState(false)
   const [activeNode, setActiveNode] = useState(2)
   const [visible, setVisible] = useState(new Set(['top']))
-  const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 })
-  const [scrollProgress, setScrollProgress] = useState(0)
   const [loading, setLoading] = useState(true)
   const modalRef = useRef(null)
   const modalOpen = palette || technical
@@ -143,7 +141,6 @@ function App() {
   useEffect(() => {
     if (loading) return
     const handler = (e) => {
-      setCursorPos({ x: e.clientX, y: e.clientY })
       const orb = document.getElementById('cursor-orb')
       if (orb) {
         orb.style.transform = `translate(${e.clientX - 12}px, ${e.clientY - 12}px)`
@@ -160,7 +157,6 @@ function App() {
       const scrollTop = window.scrollY
       const docHeight = document.documentElement.scrollHeight - window.innerHeight
       const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
-      setScrollProgress(progress)
       const fill = document.getElementById('scroll-fill')
       if (fill) fill.style.width = `${progress}%`
     }
