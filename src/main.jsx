@@ -72,7 +72,19 @@ function Scene({ scene }) {
       <div className="orb orb--two" />
       <div className="particles">
         {Array.from({ length: particleCount }, (_, i) => (
-          <i key={i} style={{ '--i': i, '--seed': (i * 17) % 100 }} />
+          <i
+            key={i}
+            style={{
+              left: `${(i * 19) % 96 + 2}%`,
+              top: `${(i * 23) % 92 + 4}%`,
+              width: `${2 + (i % 3) * 1.5}px`,
+              height: `${2 + (i % 3) * 1.5}px`,
+              opacity: scene.particleLevel * (0.3 + (i % 5) * 0.15),
+              '--duration': `${(3 + (i % 7) * 0.4) / Math.max(scene.energy, 0.25)}s`,
+              '--drift-x': `${((i % 5) - 2) * 14}px`,
+              '--drift-y': `${-18 - (i % 6) * 7}px`
+            }}
+          />
         ))}
       </div>
     </div>
@@ -209,15 +221,6 @@ function App() {
 
   return (
     <main style={{ opacity: loading ? 0 : 1, transition: 'opacity 0.8s ease' }}>
-      {loading && (
-        <div id="loader">
-          <div className="loader-ring" />
-          <div className="loader-text">INITIALIZING WORLD</div>
-          <div className="loader-bar">
-            <div className="loader-fill" />
-          </div>
-        </div>
-      )}
       <Scene scene={scene} />
       <header>
         <a className="brand" href="#top">
