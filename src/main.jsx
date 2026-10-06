@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { generateSceneFromPrompt, commandExamples } from './services/ai/sceneGenerator'
 import './styles.css'
@@ -130,6 +130,8 @@ function App() {
   const [cursorPos, setCursorPos] = useState({ x: -100, y: -100 })
   const [scrollProgress, setScrollProgress] = useState(0)
   const [loading, setLoading] = useState(true)
+  const modalRef = useRef(null)
+  const modalOpen = palette || technical
 
   // Handle loading sequence
   useEffect(() => {
@@ -186,15 +188,51 @@ function App() {
 
   useEffect(() => {
     const key = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      if (!technical && (e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault()
         setPalette((v) => !v)
       }
-      if (e.key === 'Escape') setPalette(false)
+      if (e.key === 'Escape') {
+        setPalette(false)
+        setTechnical(false)
+        setMobileMenu(false)
+      }
     }
     window.addEventListener('keydown', key)
     return () => window.removeEventListener('keydown', key)
-  }, [])
+  }, [technical])
+
+  useEffect(() => {
+    if (!modalOpen) return
+    const dialog = modalRef.current
+    const getFocusable = () => Array.from(
+      dialog.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])')
+    )
+    const focusable = getFocusable()
+    const previousFocus = document.activeElement
+    ;(dialog.querySelector('input') || focusable[0])?.focus()
+
+    const trapFocus = (event) => {
+      if (event.key !== 'Tab') return
+      const elements = getFocusable()
+      if (!elements.length) return
+      const first = elements[0]
+      const last = elements[elements.length - 1]
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    document.addEventListener('keydown', trapFocus)
+    return () => {
+      document.removeEventListener('keydown', trapFocus)
+      if (previousFocus instanceof HTMLElement) previousFocus.focus()
+    }
+  }, [modalOpen])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -471,9 +509,9 @@ function App() {
         VIEW TECHNICAL BREAKDOWN +
       </button>
       {palette && (
-        <div className="overlay" role="dialog" aria-modal="true" aria-label="AI command palette">
-          <div className="palette">
-            <button className="close" onClick={() => setPalette(false)}>
+        <div className="overlay" onMouseDown={(event) => event.target === event.currentTarget && setPalette(false)}>
+          <div className="palette" ref={modalRef} role="dialog" aria-modal="true" aria-label="AI command palette">
+            <button className="close" type="button" aria-label="Close command palette" onClick={() => setPalette(false)}>
               ×
             </button>
             <p className="eyebrow">AI COMMAND INTERFACE</p>
@@ -503,9 +541,9 @@ function App() {
         </div>
       )}
       {technical && (
-        <div className="overlay" role="dialog" aria-modal="true" aria-label="Technical breakdown">
-          <div className="palette breakdown-card">
-            <button className="close" onClick={() => setTechnical(false)}>
+        <div className="overlay" onMouseDown={(event) => event.target === event.currentTarget && setTechnical(false)}>
+          <div className="palette breakdown-card" ref={modalRef} role="dialog" aria-modal="true" aria-label="Technical breakdown">
+            <button className="close" type="button" aria-label="Close technical breakdown" onClick={() => setTechnical(false)}>
               ×
             </button>
             <p className="eyebrow">RECRUITER MODE</p>
